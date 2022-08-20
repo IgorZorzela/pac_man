@@ -20,7 +20,10 @@ class _HomePageState extends State<HomePage> {
   static int numberInRow = 11;
   int numberOfSquares = numberInRow * 17;
   int player = numberInRow * 15 + 1;
-  int ghost = numberInRow * 2 - 2;
+  int ghost = numberInRow * 15 + 1;
+  bool preGame = true;
+  bool bocaFechada = false;
+  int pontos = 0;
 
   List<int> barreiras = [
     0,
@@ -126,48 +129,50 @@ class _HomePageState extends State<HomePage> {
   ];
   List<int> food = [];
   String direction = "right";
-  bool preGame = true;
-  bool bocaFechada = false;
-  int pontos = 0;
+  String ghostLast = "left";
+  String ghostLast2 = "left";
+  String ghostLast3 = "down";
 
   void startGame() {
-    //preGame = false;
-    getFood();
-    Timer.periodic(Duration(milliseconds: 170), (timer) {
-      //movimento da boca
-      setState(() {
-        bocaFechada = !bocaFechada;
-      });
-
-      //some as comidas
-      if (food.contains(player)) {
+    if (preGame) {
+      preGame = false;
+      getFood();
+      Timer.periodic(Duration(milliseconds: 170), (timer) {
+        //movimento da boca
         setState(() {
-          food.remove(player);
+          bocaFechada = !bocaFechada;
         });
-        pontos++;
-      }
-      if (player == ghost) {
-        player = -1;
-      }
 
-      switch (direction) {
-        case "left":
-          moveLeft();
-          break;
+        //some as comidas
+        if (food.contains(player)) {
+          setState(() {
+            food.remove(player);
+          });
+          pontos++;
+        }
+        if (player == ghost) {
+          player = -1;
+        }
 
-        case "right":
-          moveRight();
-          break;
+        switch (direction) {
+          case "left":
+            moveLeft();
+            break;
 
-        case "up":
-          moveUp();
-          break;
+          case "right":
+            moveRight();
+            break;
 
-        case "down":
-          moveDown();
-          break;
-      }
-    });
+          case "up":
+            moveUp();
+            break;
+
+          case "down":
+            moveDown();
+            break;
+        }
+      });
+    }
   }
 
 //metodo de comer as bolinhas
@@ -212,6 +217,109 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void moveGhost() {
+    switch (ghostLast) {
+      case "left":
+        if (!barreiras.contains(ghost - 1)) {
+          setState(() {
+            ghost--;
+          });
+        } else {
+          if (!barreiras.contains(ghost + numberInRow)) {
+            setState(() {
+              ghost += numberInRow;
+              ghostLast = "down";
+            });
+          } else if (!barreiras.contains(ghost + 1)) {
+            setState(() {
+              ghost++;
+              ghostLast = "right";
+            });
+          } else if (!barreiras.contains(ghost - numberInRow)) {
+            setState(() {
+              ghost -= numberInRow;
+              ghostLast = "up";
+            });
+          }
+        }
+        break;
+      case "right":
+        if (!barreiras.contains(ghost + 1)) {
+          setState(() {
+            ghost++;
+          });
+        } else {
+          if (!barreiras.contains(ghost - numberInRow)) {
+            setState(() {
+              ghost -= numberInRow;
+              ghostLast = "up";
+            });
+          } else if (!barreiras.contains(ghost + numberInRow)) {
+            setState(() {
+              ghost += numberInRow;
+              ghostLast = "down";
+            });
+          } else if (!barreiras.contains(ghost - 1)) {
+            setState(() {
+              ghost--;
+              ghostLast = "left";
+            });
+          }
+        }
+        break;
+      case "up":
+        if (!barreiras.contains(ghost - numberInRow)) {
+          setState(() {
+            ghost -= numberInRow;
+            ghostLast = "up";
+          });
+        } else {
+          if (!barreiras.contains(ghost + 1)) {
+            setState(() {
+              ghost++;
+              ghostLast = "right";
+            });
+          } else if (!barreiras.contains(ghost - 1)) {
+            setState(() {
+              ghost--;
+              ghostLast = "left";
+            });
+          } else if (!barreiras.contains(ghost + numberInRow)) {
+            setState(() {
+              ghost += numberInRow;
+              ghostLast = "down";
+            });
+          }
+        }
+        break;
+      case "down":
+        if (!barreiras.contains(ghost + numberInRow)) {
+          setState(() {
+            ghost += numberInRow;
+            ghostLast = "down";
+          });
+        } else {
+          if (!barreiras.contains(ghost - 1)) {
+            setState(() {
+              ghost--;
+              ghostLast = "left";
+            });
+          } else if (!barreiras.contains(ghost + 1)) {
+            setState(() {
+              ghost++;
+              ghostLast = "right";
+            });
+          } else if (!barreiras.contains(ghost - numberInRow)) {
+            setState(() {
+              ghost -= numberInRow;
+              ghostLast = "up";
+            });
+          }
+        }
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -219,7 +327,7 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         children: [
           Expanded(
-            flex: 18,
+            flex: (MediaQuery.of(context).size.height.toInt() * 0.0139).toInt(),
             //detecta o movimento
             child: GestureDetector(
               onVerticalDragUpdate: (details) {
@@ -284,9 +392,15 @@ class _HomePageState extends State<HomePage> {
                             outerColor: Colors.blue[900],
                             //child: Text(index.toString()),
                           );
-                        } else {
+                        } else if (preGame || food.contains(index)) {
                           return MyPath(
                             innerColor: Colors.yellow,
+                            outerColor: Colors.black,
+                            // child: Text(index.toString()),
+                          );
+                        } else {
+                          return MyPath(
+                            innerColor: Colors.black,
                             outerColor: Colors.black,
                             //child: Text(index.toString()),
                           );
