@@ -1,16 +1,21 @@
 # pac_man
 
-A new Flutter project.
+Pacman Clone - Flutter.
 
-## Getting Started
+## Descrição
 
-This project is a starting point for a Flutter application.
+O objetivo deste teste é implementar um jogo de labirinto no flutter. Você deverá replicar a jogabilidade desta versão: https://www.google.com/logos/2010/pacman10-i.html
 
-A few resources to get you started if this is your first Flutter project:
+O seu jogo deve ser desenvolvido em Flutter utilizando o pacote Bonfire (https://pub.dev/packages/bonfire). O mapa deve ser criado utilizando o Tiled (https://www.mapeditor.org/).
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Observações:
+- Você pode utilizar imagens que achar na web.
+- Replique todas as características do jogo (comidas que incrementam a pontuação, NPCs que circulam pelo labirinto, colisões com o NPC que tiram vidas do jogador, itens de poder que permitem comer os NPCs, etc).
+- Use todos os efeitos e animações que conhece para deixar o jogo mais interativo possível.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Inicar a aplicação
+
+Para rodar a aplicação é necessário ter instalado em seu computador o SDK do Dart (mais informações em https://dart.dev/)
+
+Depois disso, em seu computador selecione qual disposivo quer usar (Navegador web/Smartphone), depois
+execute a aplicação, aguarde alguns estantes para inicar.
