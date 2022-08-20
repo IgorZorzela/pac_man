@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   static int numberInRow = 11;
   int numberOfSquares = numberInRow * 17;
   int player = numberInRow * 15 + 1;
-  int ghost = numberInRow * 15 + 3;
+  int ghost = numberInRow * 2 - 2;
 
   List<int> barreiras = [
     0,
@@ -131,9 +131,9 @@ class _HomePageState extends State<HomePage> {
   int pontos = 0;
 
   void startGame() {
-    preGame = false;
+    //preGame = false;
     getFood();
-    Timer.periodic(Duration(milliseconds: 120), (timer) {
+    Timer.periodic(Duration(milliseconds: 170), (timer) {
       //movimento da boca
       setState(() {
         bocaFechada = !bocaFechada;
@@ -141,11 +141,13 @@ class _HomePageState extends State<HomePage> {
 
       //some as comidas
       if (food.contains(player)) {
-        food.remove(player);
+        setState(() {
+          food.remove(player);
+        });
         pontos++;
       }
       if (player == ghost) {
-        ghost = -1;
+        player = -1;
       }
 
       switch (direction) {
@@ -249,7 +251,8 @@ class _HomePageState extends State<HomePage> {
                             padding: EdgeInsets.all(4),
                             child: Container(
                               decoration: BoxDecoration(
-                                  color: Colors.yellow, shape: BoxShape.circle),
+                                  color: Color.fromARGB(255, 255, 204, 0),
+                                  shape: BoxShape.circle),
                             ),
                           );
                         } else if (player == index) {
