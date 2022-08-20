@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   static int numberInRow = 11;
   int numberOfSquares = numberInRow * 17;
   int player = numberInRow * 15 + 1;
-  int ghost = numberInRow * 15 + 1;
+  int ghost = numberInRow * 2 - 2;
   bool preGame = true;
   bool bocaFechada = false;
   int pontos = 0;
@@ -138,6 +138,7 @@ class _HomePageState extends State<HomePage> {
       preGame = false;
       getFood();
       Timer.periodic(Duration(milliseconds: 170), (timer) {
+        moveGhost();
         //movimento da boca
         setState(() {
           bocaFechada = !bocaFechada;
@@ -383,9 +384,10 @@ class _HomePageState extends State<HomePage> {
                                   angle: pi / 2, child: MyPlayer());
                               break;
                             default:
-                              MyPlayer();
+                              return MyPlayer();
                           }
-                          return MyPlayer();
+                        } else if (ghost == index) {
+                          return MyGhost();
                         } else if (barreiras.contains(index)) {
                           return MyPixel(
                             innerColor: Colors.blue[900],
